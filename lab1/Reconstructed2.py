@@ -5,26 +5,33 @@ import numpy as np
 image = cv2.imread('mandrill1.jpg')
 
 # 分离图像的三个颜色通道
-b, g, r = cv2.split(image)
+b = image[:, :, 0]
+g = image[:, :, 1]
+r = image[:, :, 2]
 
 #这里用来填充平移后缺失的红色分量
 mean_red = np.mean(r)
 
-# 定义平移矩阵
-# [1 0 tx]
-# [0 1 ty]
-tx, ty = 30, 30  # 这里你可以修改平移的距离
-M = np.float32([[1, 0, tx], [0, 1, ty]])
+#保存一个image，这个image没有红色分量
+ResultImage = image.copy()
+ResultImage[:,:,2] = 0
 
-# 使用 warpAffine 对红色分量进行平移
-r_translated = cv2.warpAffine(r, M, (image.shape[1], image.shape[0]), borderMode=cv2.BORDER_CONSTANT, borderValue=mean_red)
+#遍历每个像素点
+for i in range (image.shape[0]-30):
+    for j in range (image.shape[1]-30):
+        ResultImage[i+30][j+30][2] = image[i][j][2]
 
-# 合并平移后的红色分量和其他两个未变的颜色通道
-result = cv2.merge([b, g, r_translated])
+for i in range (30):
+    for j in range (image.shape[1]):
+        ResultImage[i][j][2] = mean_red
+
+for i in range (30,image.shape[0]):
+    for j in range (30):
+        ResultImage[i][j][2] = mean_red
 
 # 显示原始和平移后的图像
 cv2.imshow('Original', image)
-cv2.imshow('Red Channel Translated', result)
+cv2.imshow('Red Channel Translated', ResultImage)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
