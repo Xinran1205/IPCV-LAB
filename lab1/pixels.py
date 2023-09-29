@@ -16,10 +16,12 @@ image = np.zeros([256,256,3], dtype=np.uint8)
 
 # set pixels to create colour pattern
 
+# in the left top corner, the pixel is nearly red
+# in the right bottom corner, the pixel is nearly blue and green
 for y in range(0, image.shape[0]):  # go through all rows (or scanlines)
 	for x in range(0, image.shape[1]):  # go through all columns
-		image[y, x, 0] = x # set blue component
-		image[y, x, 1] = y # set green component  
+		image[y, x, 0] = x # set blue component, x equals to the column index,0-image.shape[1]
+		image[y, x, 1] = y # set green component, y equals to the row index
 		image[y, x, 2] = 255 - image[y, x,1] # set red component
 
 # construct a window for image display

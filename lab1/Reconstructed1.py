@@ -1,17 +1,17 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 
-# 为matplotlib设置后端
+# set the backend of matplotlib
 import matplotlib
 matplotlib.use('TkAgg')
 
-# 读取图像
-mandrill0 = cv.imread('mandrill0.jpg')
+# read the image
+mandrill0 = cv.imread('image/mandrill0.jpg')
 
-# 颜色通道
+# color channels
 colors = ('b', 'g', 'r')
 
-# 对于每一个颜色通道，计算直方图并绘制
+# for each color channel, calculate the histogram and plot it
 for i, color in enumerate(colors):
     hist = cv.calcHist([mandrill0], [i], None, [256], [0, 256])
     plt.plot(hist, color=color)
@@ -21,9 +21,16 @@ plt.xlabel('Pixel value')
 plt.ylabel('Frequency')
 plt.show()
 
-#交换颜色通道
-b, g, r = cv.split(mandrill0)
-swapped_image = cv.merge((r, b, g))
+# Split the image into its channels
+b1 = mandrill0[:,:,0]
+g1 = mandrill0[:,:,1]
+r1 = mandrill0[:,:,2]
+
+swapped_image = mandrill0.copy()
+swapped_image[:,:,0] = r1
+swapped_image[:,:,1] = b1
+swapped_image[:,:,2] = g1
+
 cv.imshow('Swapped image', swapped_image)
 cv.waitKey(0)
 cv.destroyAllWindows()
