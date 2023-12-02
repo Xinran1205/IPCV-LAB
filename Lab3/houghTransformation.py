@@ -7,21 +7,22 @@ def threshold_image(image, threshold):
     return threshed
 
 
-def houghTransformation(thresholdImg, GradiantImg, min_radius, max_radius):
+def houghTransformation(thresholdImg, DirectionImg, min_radius, max_radius):
     width = thresholdImg.shape[1]
     height = thresholdImg.shape[0]
+    # 因为圆心坐标一定在height和width范围内
     hough_space = np.zeros((height, width, max_radius + 1))
     for y in range(height):
         for x in range(width):
             if thresholdImg[y, x] == 255:
                 for r in range(min_radius, max_radius + 1):
                     # for a circle, the middle point is (a, b) and it on the gradiant line of (x, y)
-                    a = int(x - r * np.cos(GradiantImg[y, x]))
-                    b = int(y - r * np.sin(GradiantImg[y, x]))
+                    a = int(x - r * np.cos(DirectionImg[y, x]))
+                    b = int(y - r * np.sin(DirectionImg[y, x]))
                     if a >= 0 and a < width and b >= 0 and b < height:
                         hough_space[b, a, r] += 1
-                    a = int(x + r * np.cos(GradiantImg[y, x]))
-                    b = int(y + r * np.sin(GradiantImg[y, x]))
+                    a = int(x + r * np.cos(DirectionImg[y, x]))
+                    b = int(y + r * np.sin(DirectionImg[y, x]))
                     if a >= 0 and a < width and b >= 0 and b < height:
                         hough_space[b, a, r] += 1
     return hough_space
